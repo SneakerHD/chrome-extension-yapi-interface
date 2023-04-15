@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>360悬浮气泡效果</title>
+    <style>
+      body {
+        background-color: #333;
+      }
+
+      canvas {
+        position: absolute;
+        z-index: 9999;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="bubbleCanvas"></canvas>
+
+    <script>
+      const canvas = document.getElementById("bubbleCanvas");
+      const ctx = canvas.getContext("2d");
+
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      // 定义气泡类
+      class Bubble {
+        constructor(x, y, radius, speed) {
+          this.x = x;
+          this.y = y;
+          this.radius = radius;
+          this.speed = speed;
+        }
+
+        // 绘制气泡
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+          ctx.fill();
+          ctx.closePath();
+        }
+
+        // 更新气泡位置
+        update() {
+          this.y -= this.speed;
+
+          if (this.y + this.radius < 0) {
+            this.y = canvas.height + this.radius;
+          }
+        }
+      }
+
+      const bubbles = [];
+
+      // 创建气泡
+      for (let i = 0; i < 20; i++) {
+        const radius = Math.random() * 30 + 10;
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height + canvas.height;
+        const speed = Math.random() * 2 + 1;
+
+        bubbles.push(new Bubble(x, y, radius, speed));
+      }
+
+      // 绘制气泡动画
+      function animate() {
+        requestAnimationFrame(animate);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = 0; i < bubbles.length; i++) {
+          bubbles[i].draw();
+          bubbles[i].update();
+        }
+      }
+
+      animate();
+    </script>
+  </body>
+</html>
