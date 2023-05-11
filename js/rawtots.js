@@ -5724,10 +5724,46 @@ function isSameObj(obj1, obj2) {
     }
     return true;
 }
+
+
+//格式化数据 处理key带空格问题
+function formatMapPbj (obj) {
+  const regex = /^\s*['"]\s*(.*?)\s*['"]\s*$/;
+  var tag = false
+  for (let key in obj) {
+    if (regex.test(key)) {
+      const formattedKey = key.replace(regex, '$1');
+      obj[formattedKey] = obj[key];
+      delete obj[key];
+      tag = true
+    }
+  }
+  return  tag
+}
+
+function formatTrimObj(obj) {
+
+  for (let key in obj) {
+    const trimmedKey = key.trim();
+    if (trimmedKey !== key) {
+      obj[trimmedKey] = obj[key];
+      delete obj[key];
+    }
+  }
+
+  return obj
+}
+
+
 function findSameObj(json, typeMap, returnObj, originJson) {
     if (returnObj === void 0) { returnObj = {}; }
     if (originJson === void 0) { originJson = {}; }
     var properties = json.type === 'array' ? json.items.properties : json.properties;
+
+    var needFormat = formatMapPbj(typeMap)
+    if(needFormat){
+      formatTrimObj(properties)
+    }
     for (var key in properties) {
         var obj = properties[key];
         if (obj.type === 'string' || obj.type === 'number' || obj.type === 'boolean' || obj.type === 'integer' || obj.type === 'Date') {

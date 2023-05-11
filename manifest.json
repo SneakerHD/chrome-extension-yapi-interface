@@ -1,7 +1,7 @@
 {
 	"manifest_version": 3,
 	"name": "YapiHelper",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "Yapi文档Ts接口定义转换",
 	"icons": {
 		"16": "static/images/icon16.png",
@@ -36,8 +36,6 @@
   },
 	"permissions": [
 		"storage",
-		"activeTab",
-		"tabs",
 		"scripting"
 	],
 	"optional_permissions": [
