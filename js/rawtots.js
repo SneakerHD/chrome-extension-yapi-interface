@@ -5069,12 +5069,19 @@ function removeNullFromUnion(unionTypeName) {
     typeNames.splice(nullIndex, 1);
     return typeNames.join(' | ');
 }
+function formatKeyTrim(str) {
+  var regex = /^\s*['"]\s*(.*?)\s*['"]\s*$/
+  if(regex.test(str)) {
+    return str.replace(regex, '$1');
+  }
+  return str.trim()
+}
 function replaceTypeObjIdsWithNames(typeObj, names) {
     return (Object.entries(typeObj)
         // quote key if is invalid and question mark if optional from array merging
         .map(function (_a) {
         var key = _a[0], type = _a[1];
-        var _b = parseKeyMetaData(key), isOptional = _b.isOptional, keyValue = _b.keyValue;
+        var _b = parseKeyMetaData(key), isOptional = _b.isOptional, keyValue = formatKeyTrim(_b.keyValue);
         var isValid = isKeyNameValid(keyValue);
         var validName = isValid ? keyValue : "'" + keyValue + "'";
         return isOptional ? [validName + "?", type, isOptional] : [validName, type, isOptional];

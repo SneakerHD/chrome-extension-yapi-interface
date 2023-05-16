@@ -30,6 +30,24 @@
       document.querySelector('textarea').value = urlStr
     }
   })
+
+  function isValidURL(url) {
+    try {
+      const parsedURL = new URL(url);
+      return parsedURL.protocol === 'http:' || parsedURL.protocol === 'https:';
+    } catch (error) {
+      return false;
+    }
+  }
+  
+  function extractOrigin(url) {
+    try {
+      const parsedURL = new URL(url);
+      return parsedURL.origin;
+    } catch (error) {
+      return null;
+    }
+  }
   const btn = document.querySelector('button')
   btn.addEventListener('click', async () => {
     const regex = /^((https?:\/\/)?([\w-]+\.)+[\w-]+(:\d+)?)+$/
@@ -37,10 +55,11 @@
     const textarea = document.querySelector('textarea')
     const value = textarea.value
     const urls = value.split(';').filter(url => !!url)
-    if(!urls.length || urls.some(url => !regex.test(url))) {
+    if(!urls.length || !urls.every(url => isValidURL(url))) {
+      //不符合
       showToast('输入的业务域名有误')
     } else {
-      const data = urls.map(url=> `${url}/*`)
+      const data = urls.map(url=> extractOrigin(url))
       console.log(data)
       await Storage.setItem('Origin', data)
       chrome.runtime.sendMessage({
@@ -55,7 +74,6 @@
           });
         });
       });
-
       showToast('保存成功')
     }
   })
