@@ -5768,9 +5768,7 @@ function findSameObj(json, typeMap, returnObj, originJson) {
     var properties = json.type === 'array' ? json.items.properties : json.properties;
 
     var needFormat = formatMapPbj(typeMap)
-    if(needFormat){
-      formatTrimObj(properties)
-    }
+    formatTrimObj(properties)
     for (var key in properties) {
         var obj = properties[key];
         if (obj.type === 'string' || obj.type === 'number' || obj.type === 'boolean' || obj.type === 'integer' || obj.type === 'Date') {
